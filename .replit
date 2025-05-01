@@ -1,0 +1,20 @@
+modules = ["nodejs-20", "web"]
+run = "npm start"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "npm install"]
+
+[workflows]
+runButton = "Run"
+
+[[workflows.workflow]]
+name = "Run"
+author = 42170922
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd cantina && npm run dev"
