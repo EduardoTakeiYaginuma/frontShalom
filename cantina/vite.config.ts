@@ -5,6 +5,10 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    // Permite todos os hosts
+    allowedHosts: true
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

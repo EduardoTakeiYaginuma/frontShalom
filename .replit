@@ -1,10 +1,14 @@
+# Define os módulos necessários para o ambiente (Node.js e Web)
 modules = ["nodejs-20", "web"]
+
+# Comando padrão para rodar a aplicação
 run = "npm start"
 
 [nix]
-channel = "stable-24_05"
+channel = "stable-24_05"  # Define a versão do canal do ambiente Nix
 
 [deployment]
+# Instala as dependências automaticamente ao iniciar o ambiente
 run = ["sh", "-c", "npm install"]
 
 [workflows]
@@ -18,3 +22,12 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd cantina && npm run dev"
+
+[[ports]]
+localPort = 3000
+externalPort = 8080
+
+[[ports]]
+localPort = 5173
+externalPort = 5173
+exposeLocalhost = true
