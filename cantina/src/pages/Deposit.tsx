@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import backIcon from '../assets/Icons/back.png';
-import { BanknotesIcon, ArrowDownCircleIcon } from '@heroicons/react/24/outline';
+import API_BASE_URL from "../config.ts";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import backIcon from "../assets/Icons/back.png";
+import {
+  BanknotesIcon,
+  ArrowDownCircleIcon,
+} from "@heroicons/react/24/outline";
 
 interface Usuario {
   id: string;
@@ -14,23 +18,23 @@ const OperacaoConta: React.FC = (): JSX.Element => {
   const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const [operacao, setOperacao] = useState<'deposito' | 'retirada'>('deposito');
-  const [valor, setValor] = useState('');
+  const [operacao, setOperacao] = useState<"deposito" | "retirada">("deposito");
+  const [valor, setValor] = useState("");
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [modalType, setModalType] = useState<'error' | 'success'>('success');
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<"error" | "success">("success");
 
   useEffect(() => {
     if (!id) return;
-    fetch(`http://127.0.0.1:5000/usuarios/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Usuário não encontrado');
+    fetch(`${API_BASE_URL}/usuarios/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Usuário não encontrado");
         return res.json();
       })
       .then((data: Usuario) => setUsuario(data))
-      .catch(err => {
-        setModalType('error');
+      .catch((err) => {
+        setModalType("error");
         setModalMessage(err.message);
         setIsModalOpen(true);
       })
@@ -39,30 +43,33 @@ const OperacaoConta: React.FC = (): JSX.Element => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const amount = parseFloat(valor.replace(',', '.'));
+    const amount = parseFloat(valor.replace(",", "."));
     if (isNaN(amount) || amount <= 0) {
-      setModalType('error');
-      setModalMessage('Insira um valor válido');
+      setModalType("error");
+      setModalMessage("Insira um valor válido");
       setIsModalOpen(true);
       return;
     }
     if (!id) {
-      setModalType('error');
-      setModalMessage('ID de usuário inválido');
+      setModalType("error");
+      setModalMessage("ID de usuário inválido");
       setIsModalOpen(true);
       return;
     }
 
-    const endpoint = operacao === 'deposito' ? 'deposit' : 'withdraw';
-    const response = await fetch(`http://127.0.0.1:5000/${endpoint}/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+    const endpoint = operacao === "deposito" ? "deposit" : "withdraw";
+    const response = await fetch(`${API_BASE_URL}/${endpoint}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ valor: amount }),
     });
     const data = await response.json();
 
-    setModalType(response.ok ? 'success' : 'error');
-    setModalMessage(data.message || (response.ok ? 'Operação realizada!' : 'Falha na operação'));
+    setModalType(response.ok ? "success" : "error");
+    setModalMessage(
+      data.message ||
+        (response.ok ? "Operação realizada!" : "Falha na operação"),
+    );
     setIsModalOpen(true);
   };
 
@@ -91,17 +98,21 @@ const OperacaoConta: React.FC = (): JSX.Element => {
             className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm border-l-4"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 250 }}
-            style={{ borderColor: modalType === 'error' ? '#ef4444' : '#10b981' }}
+            transition={{ type: "spring", stiffness: 250 }}
+            style={{
+              borderColor: modalType === "error" ? "#ef4444" : "#10b981",
+            }}
           >
-            <h3 className={`text-lg font-bold mb-2 ${modalType === 'error' ? 'text-red-600' : 'text-green-600'}`}>  
-              {modalType === 'error' ? 'Ops!' : 'Legal!'}
+            <h3
+              className={`text-lg font-bold mb-2 ${modalType === "error" ? "text-red-600" : "text-green-600"}`}
+            >
+              {modalType === "error" ? "Ops!" : "Legal!"}
             </h3>
             <p className="text-gray-700 mb-4">{modalMessage}</p>
             <button
               onClick={() => {
                 setIsModalOpen(false);
-                if (modalType === 'success') navigate('/users');
+                if (modalType === "success") navigate("/users");
               }}
               className="w-full py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium hover:from-indigo-600 hover:to-purple-600 transition"
             >
@@ -133,15 +144,17 @@ const OperacaoConta: React.FC = (): JSX.Element => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Operation Selection */}
           <div>
-            <span className="block text-sm font-medium text-gray-600 mb-2">Operação</span>
+            <span className="block text-sm font-medium text-gray-600 mb-2">
+              Operação
+            </span>
             <div className="mt-1 flex items-center space-x-4">
               <button
                 type="button"
-                onClick={() => setOperacao('deposito')}
+                onClick={() => setOperacao("deposito")}
                 className={`flex-1 flex items-center justify-center space-x-2 py-2 rounded-lg border ${
-                  operacao === 'deposito'
-                    ? 'bg-green-50 border-green-400'
-                    : 'border-gray-300 hover:border-gray-400'
+                  operacao === "deposito"
+                    ? "bg-green-50 border-green-400"
+                    : "border-gray-300 hover:border-gray-400"
                 } transition`}
               >
                 <BanknotesIcon className="h-5 w-5 text-green-600" />
@@ -149,11 +162,11 @@ const OperacaoConta: React.FC = (): JSX.Element => {
               </button>
               <button
                 type="button"
-                onClick={() => setOperacao('retirada')}
+                onClick={() => setOperacao("retirada")}
                 className={`flex-1 flex items-center justify-center space-x-2 py-2 rounded-lg border ${
-                  operacao === 'retirada'
-                    ? 'bg-red-50 border-red-400'
-                    : 'border-gray-300 hover:border-gray-400'
+                  operacao === "retirada"
+                    ? "bg-red-50 border-red-400"
+                    : "border-gray-300 hover:border-gray-400"
                 } transition`}
               >
                 <ArrowDownCircleIcon className="h-5 w-5 text-red-600" />
@@ -164,7 +177,10 @@ const OperacaoConta: React.FC = (): JSX.Element => {
 
           {/* Amount Input */}
           <div>
-            <label htmlFor="valor" className="block text-sm font-medium text-gray-600 mb-1">
+            <label
+              htmlFor="valor"
+              className="block text-sm font-medium text-gray-600 mb-1"
+            >
               Valor (R$)
             </label>
             <div className="relative">
@@ -175,7 +191,7 @@ const OperacaoConta: React.FC = (): JSX.Element => {
                 type="text"
                 id="valor"
                 value={valor}
-                onChange={e => setValor(e.target.value)}
+                onChange={(e) => setValor(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 transition"
                 placeholder="0,00"
               />
@@ -187,7 +203,7 @@ const OperacaoConta: React.FC = (): JSX.Element => {
             type="submit"
             className="w-full py-3 rounded-lg bg-gradient-to-r from-green-400 to-blue-400 text-white font-semibold shadow-lg hover:from-green-500 hover:to-blue-500 transition"
           >
-            Confirmar {operacao === 'deposito' ? 'Depósito' : 'Retirada'}
+            Confirmar {operacao === "deposito" ? "Depósito" : "Retirada"}
           </button>
         </form>
       </motion.div>

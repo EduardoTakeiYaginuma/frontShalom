@@ -1,3 +1,4 @@
+import API_BASE_URL from "../config.ts";
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ const StockControl: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/produtos')
+    fetch(`${API_BASE_URL}/produtos`)
       .then(res => res.ok ? res.json() : Promise.reject('Falha ao carregar'))
       .then((data: Produto[]) => setProdutos(data))
       .catch(msg => setError(String(msg)))
@@ -40,7 +41,7 @@ const StockControl: React.FC = () => {
     const inc = parseInt(deltaQty, 10);
     if (isNaN(inc) || inc <= 0) return closeEditor();
     try {
-      await fetch(`http://127.0.0.1:5000/produtos/${id}/adjust`, {
+      await fetch(`${API_BASE_URL}/produtos${id}/adjust`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ delta: inc }),

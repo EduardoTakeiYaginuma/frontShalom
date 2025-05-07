@@ -1,3 +1,4 @@
+import API_BASE_URL from "../config.ts";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -41,7 +42,7 @@ const CreateProduct: React.FC = () => {
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/produtos', {
+      const response = await fetch(`${API_BASE_URL}/produtos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

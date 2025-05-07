@@ -1,3 +1,4 @@
+import API_BASE_URL from "../config.ts";
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +29,7 @@ const Products: React.FC = (): JSX.Element => {
   const [sortAsc, setSortAsc] = useState(true);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/produtos')
+    fetch(`${API_BASE_URL}/produtos`)
       .then(res => {
         if (!res.ok) throw new Error('Erro ao buscar produtos');
         return res.json();

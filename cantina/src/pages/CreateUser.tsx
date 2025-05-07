@@ -1,5 +1,5 @@
 // src/pages/CreateUser.tsx
-
+import API_BASE_URL from "../config.ts";
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import backIcon from '../assets/Icons/back.png'
@@ -55,7 +55,7 @@ const CreateUser: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/usuarios', {
+      const response = await fetch(`${API_BASE_URL}/usuarios`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
